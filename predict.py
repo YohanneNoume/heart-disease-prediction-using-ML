@@ -73,8 +73,23 @@ def predict():
 
 
 @app.route("/", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"})
+def home():
+    return """
+    <h2> Heart Disease Prediction API</h2>
+    <p>Status: <b>Running</b></p>
+    <p><b>POST</b> <code>/predict</code> with patient data in JSON format.</p>
+    <p>Example fields:</p>
+    <ul>
+        <li>Age</li>
+        <li>Sex</li>
+        <li>ChestPainType</li>
+        <li>RestingBP</li>
+        <li>Cholesterol</li>
+        <li>MaxHR</li>
+        <li>Oldpeak</li>
+        <li>ST_Slope</li>
+    </ul>
+    """
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=9696, debug=True)
