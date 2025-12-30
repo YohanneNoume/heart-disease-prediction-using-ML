@@ -4,26 +4,14 @@ import pickle
 import pandas as pd
 from flask import Flask, request, jsonify
 
-# ------------------------------------------------------------------
-# Load trained model
-# ------------------------------------------------------------------
-
 MODEL_PATH = "models/model.bin"
 
 with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
 
-print("✅ Model loaded successfully")
-
-# ------------------------------------------------------------------
-# Initialize Flask app
-# ------------------------------------------------------------------
+print("Model loaded successfully")
 
 app = Flask("heart-disease-prediction")
-
-# ------------------------------------------------------------------
-# Feature configuration (must match training)
-# ------------------------------------------------------------------
 
 BINARY_MAP = {
     "Sex": {"F": 0, "M": 1},
@@ -31,10 +19,6 @@ BINARY_MAP = {
 }
 
 CATEGORICAL_COLS = ["ChestPainType", "RestingECG", "ST_Slope"]
-
-# ------------------------------------------------------------------
-# Helper: feature preparation
-# ------------------------------------------------------------------
 
 def prepare_features(data):
     """
@@ -58,10 +42,6 @@ def prepare_features(data):
     df = df.reindex(columns=model_features, fill_value=0)
 
     return df
-
-# ------------------------------------------------------------------
-# Prediction endpoint
-# ------------------------------------------------------------------
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -91,18 +71,9 @@ def predict():
     
     return jsonify(result)
 
-
-# ------------------------------------------------------------------
-# Health check endpoint (optional but recommended)
-# ------------------------------------------------------------------
-
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({"status": "ok"})
-
-# ------------------------------------------------------------------
-# Run app
-# ------------------------------------------------------------------
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=9696, debug=True)
