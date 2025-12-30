@@ -52,24 +52,25 @@ def predict():
 
     X = prepare_features(customer)
 
-    probability = model.predict_proba(df)[0, 1]
+    probability = model.predict_proba(X)[0, 1]
     prediction = int(probability >= 0.5)
-    
+
     if prediction == 1:
         risk_label = "High Risk"
         risk_message = "Patient is at risk of heart disease"
     else:
         risk_label = "Low Risk"
         risk_message = "Patient is not at high risk of heart disease"
-    
+
     result = {
         "heart_disease_probability": round(float(probability), 3),
         "heart_disease_prediction": prediction,
         "risk_label": risk_label,
         "risk_message": risk_message
     }
-    
+
     return jsonify(result)
+
 
 @app.route("/", methods=["GET"])
 def health():
