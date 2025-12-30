@@ -1,0 +1,108 @@
+# Heart Disease Prediction Service (Flask API)
+
+import pickle
+import pandas as pd
+from flask import Flask, request, jsonify
+
+# ------------------------------------------------------------------
+# Load trained model
+# ------------------------------------------------------------------
+
+MODEL_PATH = "models/model.bin"
+
+with open(MODEL_PATH, "rb") as f:
+    model = pickle.load(f)
+
+print("✅ Model loaded successfully")
+
+# ------------------------------------------------------------------
+# Initialize Flask app
+# ------------------------------------------------------------------
+
+app = Flask("heart-disease-prediction")
+
+# ------------------------------------------------------------------
+# Feature configuration (must match training)
+# ------------------------------------------------------------------
+
+BINARY_MAP = {
+    "Sex": {"F": 0, "M": 1},
+    "ExerciseAngina": {"N": 0, "Y": 1}
+}
+
+CATEGORICAL_COLS = ["ChestPainType", "RestingECG", "ST_Slope"]
+
+# ------------------------------------------------------------------
+# Helper: feature preparation
+# ------------------------------------------------------------------
+
+def prepare_features(data):
+    """
+    Converts raw JSON input into model-ready feature vector
+    """
+    df = pd.DataFrame([data])
+
+    # Encode binary categorical features
+    for col, mapping in BINARY_MAP.items():
+        df[col] = df[col].map(mapping)
+
+    # One-hot encode categorical features
+    df = pd.get_dummies(
+        df,
+        columns=CATEGORICAL_COLS,
+        drop_first=True
+    )
+
+    # Align features with training data
+    model_features = model.get_booster().feature_names
+    df = df.reindex(columns=model_features, fill_value=0)
+
+    return df
+
+# ------------------------------------------------------------------
+# Prediction endpoint
+# ------------------------------------------------------------------
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    customer = request.get_json()
+
+    if customer is None:
+        return jsonify({"error": "Invalid JSON input"}), 400
+
+    X = prepare_features(customer)
+
+    probability = model.predict_proba(df)[0, 1]
+    prediction = int(probability >= 0.5)
+    
+    if prediction == 1:
+        risk_label = "High Risk"
+        risk_message = "Patient is at risk of heart disease"
+    else:
+        risk_label = "Low Risk"
+        risk_message = "Patient is not at high risk of heart disease"
+    
+    result = {
+        "heart_disease_probability": round(float(probability), 3),
+        "heart_disease_prediction": prediction,
+        "risk_label": risk_label,
+        "risk_message": risk_message
+    }
+    
+    return jsonify(result)
+
+
+# ------------------------------------------------------------------
+# Health check endpoint (optional but recommended)
+# ------------------------------------------------------------------
+
+@app.route("/", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"})
+
+# ------------------------------------------------------------------
+# Run app
+# ------------------------------------------------------------------
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=9696, debug=True)
