@@ -1,4 +1,4 @@
-# Heart Disease Prediction System
+# Heart Disease Prediction System (ML + Cloud Deployment)
 
 ## Problem Description
 
@@ -12,7 +12,7 @@ The system:
 * Predicts heart disease risk using a trained ML model
 * Exposes predictions via a **Flask REST API**
 * Is **containerized with Docker**
-* Is **ready for cloud deployment**
+* Is **deployed to the cloud using Render**
 
 This solution can be used as a decision-support tool or integrated into healthcare applications for early risk assessment.
 
@@ -101,7 +101,7 @@ Models were evaluated using:
 ## Project Structure
 
 ```
-heart-disease-prediction/
+heart-disease-prediction-using-ML/
 │
 ├── data/
 │   └── heart.csv
@@ -231,18 +231,131 @@ Gunicorn is used as the production WSGI server.
 ---
 
 ## Cloud Deployment
+The application is deployed using Render (Docker-based service).
 
-The application is fully containerized and suitable for deployment on cloud platforms such as:
+Live URL
+https://heart-disease-prediction-using-ml-7xw3.onrender.com/
 
-* Render
 
-Deployment includes:
+Deployment validation includes:
 
-* Docker image
-* Flask API running with Gunicorn
-* Public endpoint for testing
+* API accessible via browser
+* /predict endpoint tested via Postman
+* Docker container running successfully
 
-A deployed URL or screenshots demonstrating a successful request can be used as proof of deployment.
+<img width="1053" height="600" alt="image" src="https://github.com/user-attachments/assets/d2f93c46-c23d-4dfe-9db0-88b2a617959e" />
 
 ---
+
+## API Testing with Postman
+
+The deployed API was tested using **Postman** to verify correct cloud deployment and prediction behavior.
+
+### Step 1: Open Postman
+
+Download and open Postman from:
+[https://www.postman.com/downloads/](https://www.postman.com/downloads/)
+
+---
+
+### Step 2: Create a New Request
+
+* Click **New → HTTP Request**
+* Set the request method to **POST**
+* Enter the deployed API URL:
+
+```
+https://heart-disease-prediction-using-ml-7xw3.onrender.com/predict
+```
+
+---
+
+### Step 3: Configure Headers
+
+Go to the **Headers** tab and add:
+
+| Key          | Value            |
+| ------------ | ---------------- |
+| Content-Type | application/json |
+
+---
+
+### Step 4: Add Request Body
+
+1. Go to the **Body** tab
+2. Select **raw**
+3. Choose **JSON** from the dropdown
+4. Paste the following example JSON:
+
+```json
+{
+  "Age": 63,
+  "Sex": "M",
+  "ChestPainType": "ATA",
+  "RestingBP": 145,
+  "Cholesterol": 233,
+  "FastingBS": 1,
+  "RestingECG": "Normal",
+  "MaxHR": 150,
+  "ExerciseAngina": "N",
+  "Oldpeak": 2.3,
+  "ST_Slope": "Flat"
+}
+```
+
+---
+
+### Step 5: Send the Request
+
+Click **Send**.
+
+---
+
+### Step 6: Expected Response
+
+If the API is running correctly, you should receive a JSON response similar to:
+
+```json
+{
+  "heart_disease_prediction": 1,
+  "heart_disease_probability": 0.725,
+  "risk_label": "High Risk",
+  "risk_message": "Patient is at risk of heart disease"
+}
+```
+
+---
+
+### Notes
+
+* `heart_disease_prediction`
+
+  * `0` → No Heart Disease
+  * `1` → Heart Disease
+* The `risk_label` and `risk_message` fields make the output **human-readable**.
+* Screenshots from Postman are included in the submission as proof of successful cloud deployment.
+<img width="1371" height="952" alt="image" src="https://github.com/user-attachments/assets/041734a3-269f-4c92-bffd-1f2b624a3fdb" />
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
