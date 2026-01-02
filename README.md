@@ -340,6 +340,35 @@ If the API is running correctly, you should receive a JSON response similar to:
 ---
 
 
+## Peer Review Readiness
+
+This project was tested from a **fresh GitHub clone** to ensure full reproducibility.
+
+### Verification steps performed:
+
+* Cloned the repository from GitHub
+* Created a new virtual environment
+* Installed dependencies from `requirements.txt`
+* Trained the model using `train.py`
+* Tested predictions using `predict_test.py`
+* Ran the Flask API locally and via Docker
+
+All components ran **end-to-end without errors** following the instructions in this README.
+
+**Submission commit:**
+
+```
+eb21e2e
+```
+
+**Git tag:**
+
+```
+submission-v1
+```
+
+---
+
 
 
 
