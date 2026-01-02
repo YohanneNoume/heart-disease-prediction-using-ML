@@ -41,6 +41,13 @@ X = pd.get_dummies(
     columns=["ChestPainType", "RestingECG", "ST_Slope"],
     drop_first=True
 )
+FEATURES_PATH = MODEL_DIR / "feature_columns.pkl"
+
+with open(FEATURES_PATH, "wb") as f:
+    pickle.dump(X.columns.tolist(), f)
+
+print(f"Feature columns saved to {FEATURES_PATH}")
+
 
 # Train / Validation / Test split
 X_full_train, X_test, y_full_train, y_test = train_test_split(
