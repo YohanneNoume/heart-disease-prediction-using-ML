@@ -13,6 +13,7 @@ The system:
 * Exposes predictions via a **Flask REST API**
 * Is **containerized with Docker**
 * Is **deployed to the cloud using Render**
+* Is **tested on Postman** 
 
 This solution can be used as a decision-support tool or integrated into healthcare applications for early risk assessment.
 
@@ -337,6 +338,7 @@ If the API is running correctly, you should receive a JSON response similar to:
 <img width="1371" height="952" alt="image" src="https://github.com/user-attachments/assets/041734a3-269f-4c92-bffd-1f2b624a3fdb" />
 
 ---
+
 
 
 
